@@ -1,4 +1,4 @@
-import { Table } from 'proton-tsc';
+import { Table, Name } from 'proton-tsc';
 
 @table('global', singleton)
 export class GuestbookGlobal extends Table {
@@ -9,11 +9,27 @@ export class GuestbookGlobal extends Table {
     ) {
         super();
     }
+
+    public increment(): void {
+        this.entryId++;
+    }
 }
 
 @table('entries')
 export class GuestbookEntry extends Table {
     // see https://docs.xprnetwork.org/contract-sdk/storage.html
     // TODO constructor for properties: id (u64), guest (Name), message (string), timestamp (u64)
-    // TODO primary key (id)
+    constructor(
+        public id: u64 = 0,
+        public guest: Name = new Name(),
+        public message: string = "",
+        public timestamp: u64 = 0
+    ) {
+        super();
+    }
+
+    @primary
+    get primary(): u64 {
+        return this.id;
+    }
 }
